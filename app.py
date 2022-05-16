@@ -1,3 +1,4 @@
+import hashlib
 import json
 from flask import Flask, jsonify, request
 from flask_cors import CORS
@@ -19,12 +20,12 @@ def hello_world():
 def sign_up():
     data = json.loads(request.data)
 
-    # postman 에서 send 보내고 그 값을 이렇게 적어서 Robo3T에 넣기?????!!!!
+    email = data['email']
+    password = data['password']
 
-    email = data["email"]
-    password = data["password"]
+    hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
 
-    doc = {'email': email, 'password': password}
+    doc = {'email': email, 'password': hashed_password}
     db.users.insert_one(doc)
 
     return jsonify({'message': 'success2'})
